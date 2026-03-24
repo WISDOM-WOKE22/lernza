@@ -31,11 +31,15 @@ function getInitialTheme(): Theme {
   try {
     const stored = localStorage.getItem("lernza-theme")
     if (stored === "dark" || stored === "light") return stored
-  } catch (_) {}
+  }catch (_:unknown) {
+        console.error(_)
+      }
   // 2. Fall back to system preference
   try {
     return window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light"
-  } catch (_) {}
+  } catch (_:unknown) {
+        console.error(_)
+      }
   return "light"
 }
 
@@ -76,7 +80,9 @@ function App() {
     }
     try {
       localStorage.setItem("lernza-theme", theme)
-    } catch (_) {}
+    } catch (_:unknown) {
+        console.error(_)
+      }
   }, [theme])
 
   // Listen for system preference changes (when no stored preference)
@@ -89,7 +95,9 @@ function App() {
         if (!stored) {
           setTheme(e.matches ? "dark" : "light")
         }
-      } catch (_) {}
+      } catch (_:unknown) {
+        console.error(_)
+      }
     }
     mediaQuery.addEventListener("change", handleChange)
     return () => mediaQuery.removeEventListener("change", handleChange)

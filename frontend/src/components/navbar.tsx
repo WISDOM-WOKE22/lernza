@@ -45,7 +45,7 @@ function ThemeToggle() {
       aria-label={`Switch to ${isDark ? "light" : "dark"} mode`}
       title={`Switch to ${isDark ? "light" : "dark"} mode`}
       className={cn(
-        "relative w-9 h-9 border-[2px] border-black shadow-[2px_2px_0_#000]",
+        "relative w-9 h-9 border-2 border-black shadow-[2px_2px_0_#000]",
         "flex items-center justify-center neo-press cursor-pointer overflow-hidden",
         isDark
           ? "bg-primary text-black hover:bg-yellow-300"
@@ -102,7 +102,7 @@ export function Navbar({ activePage, onNavigate }: NavbarProps) {
               key={item.key}
               onClick={() => handleNavigate(item.key)}
               className={cn(
-                "px-4 py-2 text-sm font-bold transition-all cursor-pointer border-[2px] animated-underline",
+                "px-4 py-2 text-sm font-bold transition-all cursor-pointer border-2 animated-underline",
                 activePage === item.key
                   ? "bg-primary border-black shadow-[2px_2px_0_#000] active"
                   : "border-transparent hover:border-black hover:bg-secondary"
@@ -119,7 +119,7 @@ export function Navbar({ activePage, onNavigate }: NavbarProps) {
 
           {connected ? (
             <>
-              <div className="hidden sm:flex items-center gap-2 border-[2px] border-black bg-secondary px-3 py-1.5 shadow-[2px_2px_0_#000]">
+              <div className="hidden sm:flex items-center gap-2 border-2 border-black bg-secondary px-3 py-1.5 shadow-[2px_2px_0_#000]">
                 <div className="h-2.5 w-2.5 bg-success border border-black" />
                 <span className="text-sm font-mono font-bold">{shortAddress}</span>
               </div>
@@ -142,7 +142,7 @@ export function Navbar({ activePage, onNavigate }: NavbarProps) {
           {/* Mobile hamburger */}
           <button
             onClick={() => setMobileOpen(!mobileOpen)}
-            className="sm:hidden w-9 h-9 border-[2px] border-black bg-card shadow-[2px_2px_0_#000] flex items-center justify-center neo-press cursor-pointer"
+            className="sm:hidden w-9 h-9 border-2 border-black bg-card shadow-[2px_2px_0_#000] flex items-center justify-center neo-press cursor-pointer"
           >
             {mobileOpen ? <X className="h-4 w-4" /> : <Menu className="h-4 w-4" />}
           </button>
@@ -158,7 +158,7 @@ export function Navbar({ activePage, onNavigate }: NavbarProps) {
                 key={item.key}
                 onClick={() => handleNavigate(item.key)}
                 className={cn(
-                  "w-full text-left px-4 py-3 text-sm font-bold transition-all cursor-pointer border-[2px]",
+                  "w-full text-left px-4 py-3 text-sm font-bold transition-all cursor-pointer border-2",
                   activePage === item.key
                     ? "bg-primary border-black shadow-[2px_2px_0_#000]"
                     : "border-transparent hover:border-black hover:bg-secondary"

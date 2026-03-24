@@ -17,7 +17,7 @@ function WalletAvatar({ address }: { address: string }) {
   })
 
   return (
-    <div className="w-20 h-20 border-[3px] border-black shadow-[4px_4px_0_#000] grid grid-cols-4 overflow-hidden flex-shrink-0">
+    <div className="w-20 h-20 border-[3px] border-black shadow-[4px_4px_0_#000] grid grid-cols-4 overflow-hidden shrink-0">
       {cells.map((color, i) => (
         <div key={i} style={{ backgroundColor: color }} />
       ))}
@@ -43,8 +43,8 @@ export function Profile() {
       <div className="min-h-[calc(100vh-67px)] flex items-center justify-center relative overflow-hidden">
         <div className="absolute inset-0 bg-grid-dots pointer-events-none" />
         <div className="absolute top-[12%] right-[7%] w-20 h-20 bg-primary border-[3px] border-black shadow-[4px_4px_0_#000] rotate-12 opacity-[0.08] animate-float" style={{ animationDuration: "8s" }} />
-        <div className="absolute bottom-[18%] left-[5%] w-14 h-14 bg-success border-[2px] border-black shadow-[3px_3px_0_#000] -rotate-6 opacity-[0.07] animate-float" style={{ animationDuration: "6s", animationDelay: "1s" }} />
-        <div className="absolute top-[55%] right-[4%] w-10 h-10 bg-primary border-[2px] border-black shadow-[2px_2px_0_#000] rotate-45 opacity-[0.06] animate-float" style={{ animationDuration: "7s", animationDelay: "2s" }} />
+        <div className="absolute bottom-[18%] left-[5%] w-14 h-14 bg-success border-2 border-black shadow-[3px_3px_0_#000] -rotate-6 opacity-[0.07] animate-float" style={{ animationDuration: "6s", animationDelay: "1s" }} />
+        <div className="absolute top-[55%] right-[4%] w-10 h-10 bg-primary border-2 border-black shadow-[2px_2px_0_#000] rotate-45 opacity-[0.06] animate-float" style={{ animationDuration: "7s", animationDelay: "2s" }} />
 
         <div className="relative px-4 max-w-lg mx-auto">
           <div className="bg-card text-card-foreground border-[3px] border-black shadow-[8px_8px_0_#000] overflow-hidden animate-scale-in">
@@ -71,7 +71,7 @@ export function Profile() {
                 Connect Wallet
               </Button>
 
-              <div className="mt-8 pt-6 border-t-[2px] border-black animate-fade-in-up stagger-4">
+              <div className="mt-8 pt-6 border-t-2 border-black animate-fade-in-up stagger-4">
                 <div className="flex flex-wrap justify-center gap-4">
                   {[
                     { icon: Trophy, text: "View achievements" },
@@ -90,8 +90,8 @@ export function Profile() {
             </div>
           </div>
 
-          <div className="absolute -top-4 -right-4 w-10 h-10 bg-primary border-[2px] border-black shadow-[3px_3px_0_#000] rotate-12 animate-fade-in-up stagger-5 hidden sm:block" />
-          <div className="absolute -bottom-3 -left-3 w-8 h-8 bg-success border-[2px] border-black shadow-[2px_2px_0_#000] -rotate-6 animate-fade-in-up stagger-6 hidden sm:block" />
+          <div className="absolute -top-4 -right-4 w-10 h-10 bg-primary border-2 border-black shadow-[3px_3px_0_#000] rotate-12 animate-fade-in-up stagger-5 hidden sm:block" />
+          <div className="absolute -bottom-3 -left-3 w-8 h-8 bg-success border-2 border-black shadow-[2px_2px_0_#000] -rotate-6 animate-fade-in-up stagger-6 hidden sm:block" />
         </div>
       </div>
     )
@@ -115,8 +115,8 @@ export function Profile() {
 
           {/* Banner */}
           <div className="h-20 sm:h-28 relative">
-            <div className="absolute top-3 right-6 w-10 h-10 bg-black/5 border-[2px] border-black/10 rotate-12 animate-float" style={{ animationDuration: "7s" }} />
-            <div className="absolute bottom-2 right-24 w-6 h-6 bg-black/5 border-[2px] border-black/10 -rotate-6 animate-float" style={{ animationDuration: "5s", animationDelay: "1s" }} />
+            <div className="absolute top-3 right-6 w-10 h-10 bg-black/5 border-2 border-black/10 rotate-12 animate-float" style={{ animationDuration: "7s" }} />
+            <div className="absolute bottom-2 right-24 w-6 h-6 bg-black/5 border-2 border-black/10 -rotate-6 animate-float" style={{ animationDuration: "5s", animationDelay: "1s" }} />
           </div>
 
           {/* Profile info */}
@@ -133,12 +133,12 @@ export function Profile() {
                   </Badge>
                 </div>
                 <div className="flex items-center gap-2 mt-1">
-                  <p className="font-mono text-sm text-muted-foreground font-bold truncate max-w-[200px] sm:max-w-xs">
+                  <p className="font-mono text-sm text-muted-foreground font-bold truncate max-w-50 sm:max-w-xs">
                     {address}
                   </p>
                   <button
                     onClick={handleCopy}
-                    className="w-7 h-7 border-[2px] border-black bg-card shadow-[2px_2px_0_#000] flex items-center justify-center neo-press hover:bg-secondary flex-shrink-0 cursor-pointer"
+                    className="w-7 h-7 border-2 border-black bg-card shadow-[2px_2px_0_#000] flex items-center justify-center neo-press hover:bg-secondary shrink-0 cursor-pointer"
                   >
                     {copied ? (
                       <Check className="h-3 w-3 text-success" />
@@ -150,7 +150,7 @@ export function Profile() {
               </div>
 
               <div className="sm:mt-6">
-                <div className="bg-primary border-[2px] border-black shadow-[3px_3px_0_#000] px-5 py-3">
+                <div className="bg-primary border-2 border-black shadow-[3px_3px_0_#000] px-5 py-3">
                   <div className="flex items-center gap-2">
                     <TrendingUp className="h-4 w-4" />
                     <p className="text-2xl font-black tabular-nums">
@@ -194,7 +194,7 @@ export function Profile() {
                   <CardContent className="p-5">
                     <div className="flex items-center justify-between gap-4">
                       <div className="flex items-center gap-4">
-                        <div className="w-12 h-12 bg-success/10 border-[2px] border-black shadow-[2px_2px_0_#000] flex items-center justify-center flex-shrink-0 group-hover:bg-success/20 transition-colors">
+                        <div className="w-12 h-12 bg-success/10 border-2 border-black shadow-[2px_2px_0_#000] flex items-center justify-center shrink-0 group-hover:bg-success/20 transition-colors">
                           <Coins className="h-5 w-5 text-green-700 dark:text-green-400" />
                         </div>
                         <div>

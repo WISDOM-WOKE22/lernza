@@ -36,9 +36,9 @@ export function Dashboard({ onSelectWorkspace }: DashboardProps) {
       <div className="min-h-[calc(100vh-67px)] flex items-center justify-center relative overflow-hidden">
         <div className="absolute inset-0 bg-grid-dots pointer-events-none" />
         <div className="absolute top-[10%] left-[8%] w-20 h-20 bg-primary border-[3px] border-black shadow-[4px_4px_0_#000] rotate-12 opacity-[0.08] animate-float" style={{ animationDuration: "8s" }} />
-        <div className="absolute bottom-[15%] right-[6%] w-14 h-14 bg-primary border-[2px] border-black shadow-[3px_3px_0_#000] -rotate-6 opacity-[0.1] animate-float" style={{ animationDuration: "6s", animationDelay: "1s" }} />
-        <div className="absolute top-[60%] left-[5%] w-10 h-10 bg-success border-[2px] border-black shadow-[2px_2px_0_#000] rotate-45 opacity-[0.06] animate-float" style={{ animationDuration: "7s", animationDelay: "2s" }} />
-        <div className="absolute top-[20%] right-[12%] w-8 h-8 bg-primary border-[2px] border-black opacity-[0.07] -rotate-12 animate-float" style={{ animationDuration: "9s", animationDelay: "0.5s" }} />
+        <div className="absolute bottom-[15%] right-[6%] w-14 h-14 bg-primary border-2 border-black shadow-[3px_3px_0_#000] -rotate-6 opacity-[0.1] animate-float" style={{ animationDuration: "6s", animationDelay: "1s" }} />
+        <div className="absolute top-[60%] left-[5%] w-10 h-10 bg-success border-2 border-black shadow-[2px_2px_0_#000] rotate-45 opacity-[0.06] animate-float" style={{ animationDuration: "7s", animationDelay: "2s" }} />
+        <div className="absolute top-[20%] right-[12%] w-8 h-8 bg-primary border-2 border-black opacity-[0.07] -rotate-12 animate-float" style={{ animationDuration: "9s", animationDelay: "0.5s" }} />
 
         <div className="relative px-4 max-w-lg mx-auto">
           <div className="bg-card text-card-foreground border-[3px] border-black shadow-[8px_8px_0_#000] overflow-hidden animate-scale-in">
@@ -66,7 +66,7 @@ export function Dashboard({ onSelectWorkspace }: DashboardProps) {
                 Connect Wallet
               </Button>
 
-              <div className="mt-8 pt-6 border-t-[2px] border-black animate-fade-in-up stagger-4">
+              <div className="mt-8 pt-6 border-t-2 border-black animate-fade-in-up stagger-4">
                 <div className="flex flex-wrap justify-center gap-4">
                   {[
                     { icon: Target, text: "Track quests" },
@@ -85,8 +85,8 @@ export function Dashboard({ onSelectWorkspace }: DashboardProps) {
             </div>
           </div>
 
-          <div className="absolute -top-4 -right-4 w-10 h-10 bg-primary border-[2px] border-black shadow-[3px_3px_0_#000] rotate-12 animate-fade-in-up stagger-5 hidden sm:block" />
-          <div className="absolute -bottom-3 -left-3 w-8 h-8 bg-success border-[2px] border-black shadow-[2px_2px_0_#000] -rotate-6 animate-fade-in-up stagger-6 hidden sm:block" />
+          <div className="absolute -top-4 -right-4 w-10 h-10 bg-primary border-2 border-black shadow-[3px_3px_0_#000] rotate-12 animate-fade-in-up stagger-5 hidden sm:block" />
+          <div className="absolute -bottom-3 -left-3 w-8 h-8 bg-success border-2 border-black shadow-[2px_2px_0_#000] -rotate-6 animate-fade-in-up stagger-6 hidden sm:block" />
         </div>
       </div>
     )
@@ -114,7 +114,7 @@ export function Dashboard({ onSelectWorkspace }: DashboardProps) {
               You have {MOCK_WORKSPACES.length} active quests
             </p>
           </div>
-          <Button variant="secondary" className="shimmer-on-hover group flex-shrink-0">
+          <Button variant="secondary" className="shimmer-on-hover group shrink-0">
             <Plus className="h-4 w-4" />
             New Quest
           </Button>
@@ -124,12 +124,12 @@ export function Dashboard({ onSelectWorkspace }: DashboardProps) {
       {/* Quest filters + heading */}
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-5 relative">
         <h2 className="text-xl font-black">Your Quests</h2>
-        <div className="flex gap-0 border-[2px] border-black shadow-[3px_3px_0_#000]">
+        <div className="flex gap-0 border-2 border-black shadow-[3px_3px_0_#000]">
           {(["all", "owned", "enrolled"] as const).map((f) => (
             <button
               key={f}
               onClick={() => setFilter(f)}
-              className={`px-4 py-2 text-xs font-black uppercase tracking-wider transition-colors capitalize cursor-pointer border-r-[2px] border-black last:border-r-0 ${
+              className={`px-4 py-2 text-xs font-black capitalize tracking-wider transition-colors cursor-pointer border-r-2 border-black last:border-r-0 ${
                 filter === f ? "bg-primary" : "bg-card hover:bg-secondary"
               }`}
             >
@@ -181,7 +181,7 @@ export function Dashboard({ onSelectWorkspace }: DashboardProps) {
                       {ws.description}
                     </p>
                   </div>
-                  <div className="w-8 h-8 bg-secondary border-[2px] border-black flex items-center justify-center flex-shrink-0 ml-3 group-hover:bg-primary group-hover:shadow-[2px_2px_0_#000] transition-all">
+                  <div className="w-8 h-8 bg-secondary border-2 border-black flex items-center justify-center shrink-0 ml-3 group-hover:bg-primary group-hover:shadow-[2px_2px_0_#000] transition-all">
                     <ChevronRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
                   </div>
                 </div>

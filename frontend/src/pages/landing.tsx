@@ -96,7 +96,7 @@ function AnimatedQuestCard() {
               return (
                 <div key={m.label} className="flex items-center gap-3">
                   <div
-                    className={`w-6 h-6 border-[2px] border-black flex items-center justify-center flex-shrink-0 transition-all duration-500 ${
+                    className={`w-6 h-6 border-2 border-black flex items-center justify-center shrink-0 transition-all duration-500 ${
                       done ? "bg-success scale-110" : "bg-card"
                     }`}
                   >
@@ -143,7 +143,7 @@ function AnimatedQuestCard() {
 
           {/* Earned bar */}
           <div
-            className={`mt-4 border-[2px] border-black px-4 py-2 flex items-center justify-between transition-all duration-500 ${
+            className={`mt-4 border-2 border-black px-4 py-2 flex items-center justify-between transition-all duration-500 ${
               isComplete ? "bg-success/20" : "bg-success/10"
             }`}
           >
@@ -157,7 +157,7 @@ function AnimatedQuestCard() {
 
           {/* Quest complete banner */}
           {isComplete && (
-            <div className="mt-4 bg-success border-[2px] border-black px-4 py-2.5 text-center animate-bounce-in">
+            <div className="mt-4 bg-success border-2 border-black px-4 py-2.5 text-center animate-bounce-in">
               <span className="font-black text-sm flex items-center justify-center gap-2">
                 <Sparkles className="h-4 w-4" />
                 Quest Complete!
@@ -172,7 +172,7 @@ function AnimatedQuestCard() {
       {completedCount > 0 && !isComplete && (
         <div
           key={completedCount}
-          className="absolute -bottom-5 -right-4 bg-success border-[2px] border-black shadow-[3px_3px_0_#000] px-4 py-2.5 animate-bounce-in"
+          className="absolute -bottom-5 -right-4 bg-success border-2 border-black shadow-[3px_3px_0_#000] px-4 py-2.5 animate-bounce-in"
         >
           <span className="font-black text-sm">
             +{milestones[completedCount - 1]?.reward} USDC
@@ -181,8 +181,8 @@ function AnimatedQuestCard() {
       )}
 
       {/* Floating accent blocks */}
-      <div className="absolute -top-8 -right-6 w-10 h-10 bg-primary border-[2px] border-black shadow-[3px_3px_0_#000] rotate-12 animate-float" />
-      <div className="absolute -bottom-7 -left-5 w-8 h-8 bg-primary border-[2px] border-black shadow-[2px_2px_0_#000] -rotate-6 animate-float" style={{ animationDelay: "2s" }} />
+      <div className="absolute -top-8 -right-6 w-10 h-10 bg-primary border-2 border-black shadow-[3px_3px_0_#000] rotate-12 animate-float" />
+      <div className="absolute -bottom-7 -left-5 w-8 h-8 bg-primary border-2 border-black shadow-[2px_2px_0_#000] -rotate-6 animate-float" style={{ animationDelay: "2s" }} />
     </div>
   )
 }
@@ -250,19 +250,19 @@ export function Landing({ onNavigate }: LandingProps) {
 
         <div className="absolute inset-0 pointer-events-none overflow-hidden">
           <div className="absolute top-[6%] left-[3%] w-20 h-20 bg-primary border-[3px] border-black shadow-[4px_4px_0_#000] rotate-12 opacity-[0.08] animate-float" style={{ animationDuration: "8s" }} />
-          <div className="absolute top-[14%] right-[6%] w-14 h-14 bg-primary border-[2px] border-black shadow-[3px_3px_0_#000] -rotate-6 opacity-[0.1] animate-float" style={{ animationDuration: "6s", animationDelay: "1s" }} />
-          <div className="absolute bottom-[22%] left-[7%] w-10 h-10 bg-success border-[2px] border-black shadow-[3px_3px_0_#000] rotate-45 opacity-[0.06] animate-float" style={{ animationDuration: "7s", animationDelay: "2s" }} />
+          <div className="absolute top-[14%] right-[6%] w-14 h-14 bg-primary border-2 border-black shadow-[3px_3px_0_#000] -rotate-6 opacity-[0.1] animate-float" style={{ animationDuration: "6s", animationDelay: "1s" }} />
+          <div className="absolute bottom-[22%] left-[7%] w-10 h-10 bg-success border-2 border-black shadow-[3px_3px_0_#000] rotate-45 opacity-[0.06] animate-float" style={{ animationDuration: "7s", animationDelay: "2s" }} />
           <div className="absolute top-[42%] right-[3%] w-8 h-8 bg-black opacity-[0.04] rotate-12 animate-float" style={{ animationDuration: "9s", animationDelay: "0.5s" }} />
-          <div className="absolute bottom-[16%] right-[10%] w-16 h-16 bg-primary border-[2px] border-black shadow-[3px_3px_0_#000] -rotate-12 opacity-[0.08] animate-float" style={{ animationDuration: "7s", animationDelay: "3s" }} />
-          <div className="absolute top-[55%] left-[14%] w-6 h-6 bg-primary border-[2px] border-black opacity-[0.1] rotate-6 animate-float" style={{ animationDuration: "5s", animationDelay: "1.5s" }} />
-          <div className="absolute top-[4%] left-[42%] w-12 h-12 bg-primary border-[2px] border-black shadow-[2px_2px_0_#000] rotate-45 opacity-[0.05] animate-float" style={{ animationDuration: "10s", animationDelay: "2s" }} />
+          <div className="absolute bottom-[16%] right-[10%] w-16 h-16 bg-primary border-2 border-black shadow-[3px_3px_0_#000] -rotate-12 opacity-[0.08] animate-float" style={{ animationDuration: "7s", animationDelay: "3s" }} />
+          <div className="absolute top-[55%] left-[14%] w-6 h-6 bg-primary border-2 border-black opacity-[0.1] rotate-6 animate-float" style={{ animationDuration: "5s", animationDelay: "1.5s" }} />
+          <div className="absolute top-[4%] left-[42%] w-12 h-12 bg-primary border-2 border-black shadow-[2px_2px_0_#000] rotate-45 opacity-[0.05] animate-float" style={{ animationDuration: "10s", animationDelay: "2s" }} />
           <div className="absolute top-[75%] right-[25%] w-5 h-5 bg-success border border-black opacity-[0.08] rotate-12 animate-float" style={{ animationDuration: "6s", animationDelay: "3.5s" }} />
         </div>
 
         <div className="mx-auto max-w-7xl px-4 sm:px-6 w-full">
           <div className="grid lg:grid-cols-2 gap-12 lg:gap-20 items-center">
             <div className="py-20 lg:py-0">
-              <div className="inline-flex items-center gap-2 bg-primary border-[2px] border-black shadow-[3px_3px_0_#000] px-4 py-2 mb-10 animate-fade-in-up text-sm font-bold shimmer-on-hover cursor-default">
+              <div className="inline-flex items-center gap-2 bg-primary border-2 border-black shadow-[3px_3px_0_#000] px-4 py-2 mb-10 animate-fade-in-up text-sm font-bold shimmer-on-hover cursor-default">
                 <Sparkles className="h-3.5 w-3.5" />
                 Built on Stellar
               </div>
@@ -335,7 +335,7 @@ export function Landing({ onNavigate }: LandingProps) {
 
         <div className="mx-auto max-w-7xl px-4 sm:px-6 relative">
           <div className={`text-center mb-16 reveal-up ${howInView ? "in-view" : ""}`}>
-            <div className="inline-block bg-primary border-[2px] border-black shadow-[3px_3px_0_#000] px-4 py-2 mb-6">
+            <div className="inline-block bg-primary border-2 border-black shadow-[3px_3px_0_#000] px-4 py-2 mb-6">
               <span className="font-black text-sm uppercase tracking-wider">How it works</span>
             </div>
             <h2 className="text-4xl sm:text-5xl font-black">Three steps. Zero complexity.</h2>
@@ -371,7 +371,7 @@ export function Landing({ onNavigate }: LandingProps) {
                     {item.step}
                   </div>
                   <div className="relative">
-                    <div className="w-14 h-14 bg-primary border-[2px] border-black shadow-[3px_3px_0_#000] flex items-center justify-center mb-6 group-hover:shadow-[5px_5px_0_#000] group-hover:-translate-y-1 transition-all duration-300">
+                    <div className="w-14 h-14 bg-primary border-2 border-black shadow-[3px_3px_0_#000] flex items-center justify-center mb-6 group-hover:shadow-[5px_5px_0_#000] group-hover:-translate-y-1 transition-all duration-300">
                       <item.icon className="h-6 w-6" />
                     </div>
                     <h3 className="text-xl font-black mb-3">{item.title}</h3>
@@ -442,7 +442,7 @@ export function Landing({ onNavigate }: LandingProps) {
                 style={{ transitionDelay: `${i * 150}ms` }}
               >
                 <div
-                  className={`w-14 h-14 ${feature.accent} border-[2px] border-black shadow-[3px_3px_0_#000] flex items-center justify-center mb-6 group-hover:shadow-[5px_5px_0_#000] group-hover:-translate-y-1 transition-all duration-300`}
+                  className={`w-14 h-14 ${feature.accent} border-2 border-black shadow-[3px_3px_0_#000] flex items-center justify-center mb-6 group-hover:shadow-[5px_5px_0_#000] group-hover:-translate-y-1 transition-all duration-300`}
                 >
                   <feature.icon className="h-6 w-6" />
                 </div>
@@ -465,9 +465,9 @@ export function Landing({ onNavigate }: LandingProps) {
         <div className="absolute bottom-8 right-[6%] w-20 h-20 bg-black border-[3px] border-white/20 -rotate-6 opacity-20 animate-float" style={{ animationDuration: "9s", animationDelay: "2s" }} />
         <div className="absolute top-[40%] left-[78%] w-14 h-14 bg-success border-[3px] border-black shadow-[4px_4px_0_rgba(0,0,0,0.3)] rotate-45 opacity-[0.18] animate-float" style={{ animationDuration: "6s", animationDelay: "1s" }} />
         <div className="absolute bottom-[25%] left-[12%] w-12 h-12 bg-white border-[3px] border-black shadow-[3px_3px_0_rgba(0,0,0,0.3)] -rotate-12 opacity-[0.15] animate-float" style={{ animationDuration: "8s", animationDelay: "3s" }} />
-        <div className="absolute top-[20%] right-[20%] w-10 h-10 bg-black border-[2px] border-white/20 rotate-45 opacity-[0.12] animate-float" style={{ animationDuration: "10s", animationDelay: "0.5s" }} />
-        <div className="absolute bottom-[40%] right-[35%] w-8 h-8 bg-white border-[2px] border-black -rotate-6 opacity-[0.12] animate-float" style={{ animationDuration: "7s", animationDelay: "4s" }} />
-        <div className="absolute top-[65%] left-[40%] w-16 h-16 bg-success/30 border-[2px] border-black/30 rotate-12 opacity-[0.15] animate-float" style={{ animationDuration: "8s", animationDelay: "1.5s" }} />
+        <div className="absolute top-[20%] right-[20%] w-10 h-10 bg-black border-2 border-white/20 rotate-45 opacity-[0.12] animate-float" style={{ animationDuration: "10s", animationDelay: "0.5s" }} />
+        <div className="absolute bottom-[40%] right-[35%] w-8 h-8 bg-white border-2 border-black -rotate-6 opacity-[0.12] animate-float" style={{ animationDuration: "7s", animationDelay: "4s" }} />
+        <div className="absolute top-[65%] left-[40%] w-16 h-16 bg-success/30 border-2 border-black/30 rotate-12 opacity-[0.15] animate-float" style={{ animationDuration: "8s", animationDelay: "1.5s" }} />
 
         <div className={`mx-auto max-w-7xl px-4 sm:px-6 text-center relative reveal-scale ${ctaInView ? "in-view" : ""}`}>
           <h2 className="text-4xl sm:text-5xl lg:text-6xl font-black mb-5">Ready to start earning?</h2>
@@ -493,7 +493,7 @@ export function Landing({ onNavigate }: LandingProps) {
             {/* Brand */}
             <div>
               <div className="flex items-center gap-3 mb-4">
-                <div className="w-8 h-8 bg-primary border-[2px] border-black shadow-[2px_2px_0_#000] flex items-center justify-center overflow-hidden">
+                <div className="w-8 h-8 bg-primary border-2 border-black shadow-[2px_2px_0_#000] flex items-center justify-center overflow-hidden">
                   <svg viewBox="0 0 512 512" className="h-6 w-6" aria-hidden="true">
                     <path d="M 149 117 L 149 382 L 349 382 L 349 317 L 214 317 L 214 117 Z" fill="#000000" />
                   </svg>
@@ -541,7 +541,7 @@ export function Landing({ onNavigate }: LandingProps) {
                     href={social.href}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="w-10 h-10 bg-card border-[2px] border-black shadow-[3px_3px_0_#000] flex items-center justify-center neo-press hover:shadow-[4px_4px_0_#000] active:shadow-[1px_1px_0_#000] hover:bg-primary transition-colors"
+                    className="w-10 h-10 bg-card border-2 border-black shadow-[3px_3px_0_#000] flex items-center justify-center neo-press hover:shadow-[4px_4px_0_#000] active:shadow-[1px_1px_0_#000] hover:bg-primary transition-colors"
                     aria-label={social.label}
                   >
                     <social.Icon className="h-4 w-4" />
@@ -554,7 +554,7 @@ export function Landing({ onNavigate }: LandingProps) {
             </div>
           </div>
 
-          <div className="border-t-[2px] border-black py-5 flex flex-col sm:flex-row items-center justify-between gap-3">
+          <div className="border-t-2] border-black py-5 flex flex-col sm:flex-row items-center justify-between gap-3">
             <p className="text-xs font-bold text-muted-foreground">
               Built on Stellar &middot; Open source &middot; MIT License
             </p>

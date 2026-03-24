@@ -84,7 +84,7 @@ export function WorkspaceView({ workspaceId, onBack }: WorkspaceViewProps) {
         onClick={onBack}
         className="flex items-center gap-2 text-sm font-bold text-muted-foreground hover:text-foreground mb-6 transition-colors cursor-pointer group"
       >
-        <div className="w-7 h-7 border-[2px] border-black bg-white shadow-[2px_2px_0_#000] flex items-center justify-center neo-press hover:shadow-[3px_3px_0_#000] active:shadow-[1px_1px_0_#000] group-hover:bg-primary transition-colors">
+        <div className="w-7 h-7 border-2 border-black bg-white shadow-[2px_2px_0_#000] flex items-center justify-center neo-press hover:shadow-[3px_3px_0_#000] active:shadow-[1px_1px_0_#000] group-hover:bg-primary transition-colors">
           <ArrowLeft className="h-3.5 w-3.5" />
         </div>
         Back to Dashboard
@@ -120,7 +120,7 @@ export function WorkspaceView({ workspaceId, onBack }: WorkspaceViewProps) {
                 {ws.description}
               </p>
             </div>
-            <div className="flex gap-3 flex-shrink-0">
+            <div className="flex gap-3 shrink-0">
               <Button variant="outline" size="sm" className="shimmer-on-hover">
                 <UserPlus className="h-4 w-4" />
                 Add Enrollee
@@ -170,7 +170,7 @@ export function WorkspaceView({ workspaceId, onBack }: WorkspaceViewProps) {
             <Card className="neo-lift hover:shadow-[7px_7px_0_#000] active:shadow-[2px_2px_0_#000]">
               <CardContent className="p-4 flex items-center gap-3">
                 <div
-                  className={`w-10 h-10 ${stat.bg} border-[2px] border-black shadow-[2px_2px_0_#000] flex items-center justify-center flex-shrink-0`}
+                  className={`w-10 h-10 ${stat.bg} border-2 border-black shadow-[2px_2px_0_#000] flex items-center justify-center shrink-0`}
                 >
                   <stat.icon className="h-4 w-4" />
                 </div>
@@ -216,7 +216,7 @@ export function WorkspaceView({ workspaceId, onBack }: WorkspaceViewProps) {
           <button
             key={tab}
             onClick={() => setActiveTab(tab)}
-            className={`px-6 py-3 text-sm font-black uppercase tracking-wider border-[3px] border-b-0 transition-all capitalize cursor-pointer -mb-[3px] ${
+            className={`px-6 py-3 text-sm font-black  tracking-wider border-[3px] border-b-0 transition-all capitalize cursor-pointer -mb-0.75 ${
               activeTab === tab
                 ? "border-black bg-primary shadow-[2px_-2px_0_#000]"
                 : "border-transparent hover:bg-secondary"
@@ -276,7 +276,7 @@ export function WorkspaceView({ workspaceId, onBack }: WorkspaceViewProps) {
                     <CardContent className="p-5">
                       <div className="flex items-start gap-4">
                         <div
-                          className={`w-8 h-8 border-[2px] border-black shadow-[2px_2px_0_#000] flex items-center justify-center flex-shrink-0 mt-0.5 transition-all duration-300 ${
+                          className={`w-8 h-8 border-2 border-black shadow-[2px_2px_0_#000] flex items-center justify-center shrink-0 mt-0.5 transition-all duration-300 ${
                             isCompleted ? "bg-success" : "bg-white group-hover:bg-secondary"
                           }`}
                         >
@@ -293,7 +293,7 @@ export function WorkspaceView({ workspaceId, onBack }: WorkspaceViewProps) {
                             >
                               {ms.title}
                             </h3>
-                            <div className="flex items-center gap-2 flex-shrink-0">
+                            <div className="flex items-center gap-2 shrink-0">
                               <Badge
                                 variant={isCompleted ? "success" : "default"}
                               >
@@ -401,7 +401,7 @@ export function WorkspaceView({ workspaceId, onBack }: WorkspaceViewProps) {
                     <CardContent className="p-5">
                       <div className="flex items-center justify-between">
                         <div className="flex items-center gap-3">
-                          <div className="w-10 h-10 bg-primary border-[2px] border-black shadow-[2px_2px_0_#000] flex items-center justify-center text-sm font-mono font-black group-hover:shadow-[3px_3px_0_#000] transition-shadow">
+                          <div className="w-10 h-10 bg-primary border-2 border-black shadow-[2px_2px_0_#000] flex items-center justify-center text-sm font-mono font-black group-hover:shadow-[3px_3px_0_#000] transition-shadow">
                             {addr.slice(0, 2)}
                           </div>
                           <div>
