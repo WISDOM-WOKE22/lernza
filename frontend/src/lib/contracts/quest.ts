@@ -3,10 +3,10 @@ import {
   Contract, 
   nativeToScVal, 
   scValToNative, 
-  SorobanRpc, 
   xdr,
   TransactionBuilder,
-  Asset
+  Keypair,
+  Account
 } from "@stellar/stellar-sdk";
 import { server, signAndSubmit, NETWORK_PASSPHRASE } from "./client";
 
@@ -31,27 +31,29 @@ export class QuestClient {
   // --- Read Operations ---
 
   async getQuest(questId: number): Promise<QuestInfo | null> {
-    const scQuest = await server.getContractData({
-      contractId: CONTRACT_ID,
-      key: xdr.ScVal.scvVec([
-        xdr.ScVal.scvSymbol("Quest"),
-        nativeToScVal(questId, { type: "u32" })
-      ]),
-      durability: "persistent"
-    });
+    const result = await this.invokeRead("get_quest", [
+      nativeToScVal(questId, { type: "u32" })
+    ]);
+    if (!result) return null;
     
-    if (scQuest.results[0]?.result) {
-       const native = scValToNative(scQuest.results[0].result);
-       return {
-         id: native.id,
-         owner: native.owner,
-         name: native.name,
-         description: native.description,
-         tokenAddr: native.token_addr,
-         createdAt: Number(native.created_at)
-       };
+    return {
+      id: Number(result.id),
+      owner: result.owner.toString(),
+      name: result.name.toString(),
+      description: result.description.toString(),
+      tokenAddr: result.token_addr.toString(),
+      createdAt: Number(result.created_at)
+    };
+  }
+
+  async getQuests(): Promise<QuestInfo[]> {
+    const count = await this.getQuestCount();
+    const quests: QuestInfo[] = [];
+    for (let i = 0; i < count; i++) {
+      const q = await this.getQuest(i);
+      if (q) quests.push(q);
     }
-    return null;
+    return quests;
   }
 
   async getQuestCount(): Promise<number> {
@@ -86,10 +88,10 @@ export class QuestClient {
     return signAndSubmit(tx);
   }
 
-  async addEnrollee(owner: string, questId: number, enrollee: string) {
-    const tx = await this.buildTx(owner, "add_enrollee", [
-      nativeToScVal(questId, { type: "u32" }),
-      new Address(enrollee).toScVal()
+  async enroll(user: string, questId: number) {
+    const tx = await this.buildTx(user, "enroll", [
+       nativeToScVal(questId, { type: "u32" }),
+       new Address(user).toScVal()
     ]);
     return signAndSubmit(tx);
   }
@@ -98,18 +100,21 @@ export class QuestClient {
 
   private async invokeRead(method: string, args: xdr.ScVal[]) {
     try {
-      const response = await server.simulateTransaction({
-        transaction: TransactionBuilder.build({
-          args,
-          function: method,
-          contractId: CONTRACT_ID,
-          networkPassphrase: NETWORK_PASSPHRASE,
-          source: Keypair.random().publicKey() // random source for simulation
-        })
-      });
+      const randomKP = Keypair.random();
+      const account = new Account(randomKP.publicKey(), "0");
       
-      if (response && "result" in response) {
-         return scValToNative(response.result!.retval);
+      const tx = new TransactionBuilder(account, {
+        fee: "100",
+        networkPassphrase: NETWORK_PASSPHRASE
+      })
+      .addOperation(this.contract.call(method, ...args))
+      .setTimeout(30)
+      .build();
+
+      const response = await server.simulateTransaction(tx);
+      
+      if (response && "result" in response && response.result) {
+         return scValToNative(response.result.retval);
       }
     } catch (e) {
       console.error(`Read error ${method}:`, e);
@@ -118,14 +123,13 @@ export class QuestClient {
   }
 
   private async buildTx(source: string, method: string, args: xdr.ScVal[]) {
-     const op = this.contract.call(method, ...args);
      const account = await server.getAccount(source);
      
      const tx = new TransactionBuilder(account, {
        fee: "100",
        networkPassphrase: NETWORK_PASSPHRASE
      })
-     .addOperation(op)
+     .addOperation(this.contract.call(method, ...args))
      .setTimeout(30)
      .build();
      

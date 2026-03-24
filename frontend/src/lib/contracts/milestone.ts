@@ -3,11 +3,10 @@ import {
   Contract, 
   nativeToScVal, 
   scValToNative, 
-  SorobanRpc, 
   xdr,
   TransactionBuilder,
-  Asset,
-  Keypair
+  Keypair,
+  Account
 } from "@stellar/stellar-sdk";
 import { server, signAndSubmit, NETWORK_PASSPHRASE } from "./client";
 
@@ -96,18 +95,21 @@ export class MilestoneClient {
 
   private async invokeRead(method: string, args: xdr.ScVal[]) {
     try {
-      const resp = await server.simulateTransaction({
-        transaction: TransactionBuilder.build({
-          args,
-          function: method,
-          contractId: CONTRACT_ID,
-          networkPassphrase: NETWORK_PASSPHRASE,
-          source: Keypair.random().publicKey() 
-        })
-      });
+      const randomKP = Keypair.random();
+      const account = new Account(randomKP.publicKey(), "0");
+
+      const tx = new TransactionBuilder(account, {
+        fee: "100",
+        networkPassphrase: NETWORK_PASSPHRASE
+      })
+      .addOperation(this.contract.call(method, ...args))
+      .setTimeout(30)
+      .build();
+
+      const response = await server.simulateTransaction(tx);
       
-      if (resp && "result" in resp && resp.result) {
-         return scValToNative(resp.result.retval);
+      if (response && "result" in response && response.result) {
+         return scValToNative(response.result.retval);
       }
     } catch (e) {
       console.error(`Read error ${method}:`, e);
@@ -116,14 +118,13 @@ export class MilestoneClient {
   }
 
   private async buildTx(source: string, method: string, args: xdr.ScVal[]) {
-     const op = this.contract.call(method, ...args);
      const account = await server.getAccount(source);
      
      const tx = new TransactionBuilder(account, {
        fee: "100",
        networkPassphrase: NETWORK_PASSPHRASE
      })
-     .addOperation(op)
+     .addOperation(this.contract.call(method, ...args))
      .setTimeout(30)
      .build();
      
