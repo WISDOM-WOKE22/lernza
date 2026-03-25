@@ -450,6 +450,7 @@ const { toasts, addToast, removeToast } = useToast()
           )}
         </div>
       )}
+       <ToastContainer toasts={toasts} onRemove={removeToast} />
     </div>
   )
 }
