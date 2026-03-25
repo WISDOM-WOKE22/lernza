@@ -8,7 +8,7 @@ import { NotFound } from "@/pages/not-found"
 import { CreateQuest } from "@/pages/create-quest"
 
 const VALID_PAGES = ["landing", "dashboard", "profile", "create-quest"] as const
-type Page = (typeof VALID_PAGES)[number] | "workspace" | "404"
+type Page = (typeof VALID_PAGES)[number] | "quest" | "404"
 
 interface AppState {
   page: Page
@@ -18,10 +18,10 @@ interface AppState {
 function pathToPage(pathname: string): { page: Page; questId: number | null } {
   const clean = pathname === "" || pathname === "/" ? "/" : pathname
 
-  if (clean === "/") return { page: "landing", workspaceId: null }
-  if (clean === "/dashboard") return { page: "dashboard", workspaceId: null }
-  if (clean === "/profile") return { page: "profile", workspaceId: null }
-  if (clean === "/create-quest") return { page: "create-quest", workspaceId: null }
+  if (clean === "/") return { page: "landing", questId: null }
+  if (clean === "/dashboard") return { page: "dashboard", questId: null }
+  if (clean === "/profile") return { page: "profile", questId: null }
+  if (clean === "/create-quest") return { page: "create-quest", questId: null }
 
   const qMatch = clean.match(/^\/quest\/(\d+)$/)
   if (qMatch) return { page: "quest", questId: Number(qMatch[1]) }
@@ -59,38 +59,6 @@ export default function App() {
     setState({ page: "quest", questId: id })
   }, [])
 
-  const renderPage = () => {
-    if (state.page === "workspace" && state.workspaceId !== null) {
-      return (
-        <WorkspaceView
-          workspaceId={state.workspaceId}
-          onBack={() => handleNavigate("dashboard")}
-        />
-      )
-    }
-    switch (state.page) {
-      case "landing":
-        return <Landing onNavigate={handleNavigate} />
-      case "dashboard":
-        return (
-          <Dashboard
-            onSelectWorkspace={handleSelectWorkspace}
-            onCreateQuest={() => handleNavigate("create-quest")}
-          />
-        )
-      case "create-quest":
-        return (
-          <CreateQuest
-            onBack={() => handleNavigate("dashboard")}
-          />
-        )
-      case "profile":
-        return <Profile />
-      default:
-        return <NotFound onNavigate={handleNavigate} />
-    }
-  }
-
   return (
     <Layout onNavigate={navigate} activePage={state.page === "quest" ? "dashboard" : state.page}>
       {state.page === "quest" && state.questId !== null ? (
@@ -98,7 +66,12 @@ export default function App() {
       ) : state.page === "landing" ? (
         <Landing onNavigate={navigate} />
       ) : state.page === "dashboard" ? (
-        <Dashboard onSelectQuest={onSelectQuest} />
+        <Dashboard 
+          onSelectQuest={onSelectQuest} 
+          onCreateQuest={() => navigate("create-quest")} 
+        />
+      ) : state.page === "create-quest" ? (
+         <CreateQuest onBack={() => navigate("dashboard")} />
       ) : state.page === "profile" ? (
         <Profile />
       ) : (
