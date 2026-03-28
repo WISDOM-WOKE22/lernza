@@ -255,8 +255,8 @@ export function QuestView() {
           (entry): entry is CompletionRecord => entry !== null
         )
         setCompletions(filteredCompletions)
-      } catch (error) {
-        console.error("Failed to fetch completions:", error)
+      } catch {
+        // silently ignore completion fetch errors
       }
     } else {
       setCompletions(EMPTY_COMPLETIONS)

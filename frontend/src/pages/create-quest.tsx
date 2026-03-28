@@ -955,8 +955,8 @@ export function CreateQuest() {
       // Clear the imported data so it doesn't persist
       localStorage.removeItem("lernza:imported-quest")
     }
-  } catch (err) {
-    console.error("Failed to load imported quest:", err)
+  } catch {
+    // silently ignore import parse errors
   }
 
   const [step, setStep] = useState<FormStep>(initialStep)

@@ -159,8 +159,7 @@ export function Profile() {
             totalEnrollees += enrollees.length
             totalPoolBalance += balance
             return { ...q, enrolleesCount: enrollees.length, poolBalance: balance }
-          } catch (err) {
-            console.error(`Failed to fetch stats for quest ${q.id}:`, err)
+          } catch {
             return { ...q, enrolleesCount: 0, poolBalance: 0n }
           }
         })
