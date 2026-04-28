@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button"
 import { buttonVariants } from "@/components/ui/button-variants"
 import { useWallet } from "@/hooks/use-wallet"
 import { useWalletBalance } from "@/hooks/use-wallet-balance"
-import { useTheme } from "@/hooks/use-theme"
+import { useColorScheme } from "@/hooks/use-color-scheme"
 import { useLocation, useNavigate } from "react-router-dom"
 import { cn } from "@/lib/utils"
 import { PrefetchLink } from "@/components/PrefetchLink"
@@ -36,7 +36,7 @@ function LogoMark({ className }: { className?: string }) {
 }
 
 function ThemeToggle() {
-  const { theme, toggleTheme } = useTheme()
+  const { theme, toggleTheme } = useColorScheme()
   const isDark = theme === "dark"
 
   return (

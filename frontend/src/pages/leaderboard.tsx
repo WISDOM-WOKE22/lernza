@@ -1,4 +1,4 @@
-import { useEffect, useCallback } from "react"
+import { useEffect, useCallback, useRef } from "react"
 import { Trophy, Users, Coins, RefreshCw } from "lucide-react"
 import { useAsyncData } from "@/hooks/use-async-data"
 import { LoadingState, EmptyState } from "@/components/ui/async-states"
@@ -25,8 +25,10 @@ interface ActiveQuestEntry {
   rank: number
 }
 
-async function fetchTopEarners(): Promise<EarnerEntry[]> {
-  const quests = await questClient.listPublicQuests(0, 50)
+const PAGE_SIZE = 50
+
+async function fetchTopEarners(offset: number = 0): Promise<EarnerEntry[]> {
+  const quests = await questClient.listPublicQuests(offset, PAGE_SIZE)
   const enrolleeSets = await Promise.all(quests.map(q => questClient.getEnrollees(q.id)))
 
   const allAddresses = new Set<string>()
@@ -45,12 +47,11 @@ async function fetchTopEarners(): Promise<EarnerEntry[]> {
 
   return entries
     .sort((a, b) => (b.totalEarned > a.totalEarned ? 1 : b.totalEarned < a.totalEarned ? -1 : 0))
-    .slice(0, 20)
-    .map((e, i) => ({ ...e, rank: i + 1 }))
+    .map((e, i) => ({ ...e, rank: offset + i + 1 }))
 }
 
-async function fetchMostActiveQuests(): Promise<ActiveQuestEntry[]> {
-  const quests = await questClient.listPublicQuests(0, 50)
+async function fetchMostActiveQuests(offset: number = 0): Promise<ActiveQuestEntry[]> {
+  const quests = await questClient.listPublicQuests(offset, PAGE_SIZE)
   const withCounts = await Promise.all(
     quests.map(async q => {
       const enrollees = await questClient.getEnrollees(q.id)
@@ -60,8 +61,7 @@ async function fetchMostActiveQuests(): Promise<ActiveQuestEntry[]> {
 
   return withCounts
     .sort((a, b) => b.enrolleeCount - a.enrolleeCount)
-    .slice(0, 20)
-    .map((q, i) => ({ ...q, rank: i + 1 }))
+    .map((q, i) => ({ ...q, rank: offset + i + 1 }))
 }
 
 function RankBadge({ rank }: { rank: number }) {
@@ -80,22 +80,98 @@ function RankBadge({ rank }: { rank: number }) {
 
 export function Leaderboard() {
   const [activeTab, setActiveTab] = useState<ActiveTab>("earners")
+  const [earnersOffset, setEarnersOffset] = useState(0)
+  const [questsOffset, setQuestsOffset] = useState(0)
+  const [allEarners, setAllEarners] = useState<EarnerEntry[]>([])
+  const [allQuests, setAllQuests] = useState<ActiveQuestEntry[]>([])
+  const [isLoadingMore, setIsLoadingMore] = useState(false)
+  const observerTarget = useRef<HTMLDivElement>(null)
 
   const {
-    data: earners,
+    data: earnersData,
     isLoading: earnersLoading,
     error: earnersError,
-    isEmpty: earnersEmpty,
     refetch: refetchEarners,
-  } = useAsyncData(fetchTopEarners, { enabled: activeTab === "earners" })
+  } = useAsyncData(() => fetchTopEarners(0), { enabled: activeTab === "earners" })
 
   const {
-    data: activeQuests,
+    data: questsData,
     isLoading: questsLoading,
     error: questsError,
-    isEmpty: questsEmpty,
     refetch: refetchQuests,
-  } = useAsyncData(fetchMostActiveQuests, { enabled: activeTab === "quests" })
+  } = useAsyncData(() => fetchMostActiveQuests(0), { enabled: activeTab === "quests" })
+
+  useEffect(() => {
+    if (activeTab === "earners" && earnersData) {
+      setAllEarners(earnersData)
+      setEarnersOffset(0)
+    }
+  }, [earnersData, activeTab])
+
+  useEffect(() => {
+    if (activeTab === "quests" && questsData) {
+      setAllQuests(questsData)
+      setQuestsOffset(0)
+    }
+  }, [questsData, activeTab])
+
+  const loadMoreEarners = useCallback(async () => {
+    setIsLoadingMore(true)
+    try {
+      const newOffset = earnersOffset + PAGE_SIZE
+      const more = await fetchTopEarners(newOffset)
+      if (more.length > 0) {
+        const nextRank = allEarners.length + 1
+        setAllEarners(prev => [
+          ...prev,
+          ...more.map((e, i) => ({ ...e, rank: nextRank + i })),
+        ])
+        setEarnersOffset(newOffset)
+      }
+    } catch {
+      // silently fail
+    } finally {
+      setIsLoadingMore(false)
+    }
+  }, [earnersOffset, allEarners.length])
+
+  const loadMoreQuests = useCallback(async () => {
+    setIsLoadingMore(true)
+    try {
+      const newOffset = questsOffset + PAGE_SIZE
+      const more = await fetchMostActiveQuests(newOffset)
+      if (more.length > 0) {
+        const nextRank = allQuests.length + 1
+        setAllQuests(prev => [
+          ...prev,
+          ...more.map((q, i) => ({ ...q, rank: nextRank + i })),
+        ])
+        setQuestsOffset(newOffset)
+      }
+    } catch {
+      // silently fail
+    } finally {
+      setIsLoadingMore(false)
+    }
+  }, [questsOffset, allQuests.length])
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(entries => {
+      if (entries[0]?.isIntersecting && !isLoadingMore) {
+        if (activeTab === "earners") {
+          void loadMoreEarners()
+        } else {
+          void loadMoreQuests()
+        }
+      }
+    })
+
+    if (observerTarget.current) {
+      observer.observe(observerTarget.current)
+    }
+
+    return () => observer.disconnect()
+  }, [activeTab, isLoadingMore, loadMoreEarners, loadMoreQuests])
 
   const refetchActive = useCallback(() => {
     if (activeTab === "earners") return refetchEarners()
@@ -114,7 +190,8 @@ export function Leaderboard() {
 
   const isLoading = activeTab === "earners" ? earnersLoading : questsLoading
   const error = activeTab === "earners" ? earnersError : questsError
-  const isEmpty = activeTab === "earners" ? earnersEmpty : questsEmpty
+  const isEmpty = activeTab === "earners" ? allEarners.length === 0 : allQuests.length === 0
+  const displayData = activeTab === "earners" ? allEarners : allQuests
 
   return (
     <div className="mx-auto max-w-3xl px-4 py-10 sm:px-6">
@@ -178,46 +255,56 @@ export function Leaderboard() {
       )}
 
       {/* Top Earners list */}
-      {!isLoading && !error && !isEmpty && activeTab === "earners" && earners && (
-        <ol className="space-y-2">
-          {earners.map(entry => (
-            <li
-              key={entry.address}
-              className="border-border bg-card flex items-center gap-4 border-[2px] px-4 py-3 shadow-[3px_3px_0_var(--color-border)]"
-            >
-              <RankBadge rank={entry.rank} />
-              <PrefetchLink
-                to={`/creator/${entry.address}`}
-                className="hover:text-primary flex-1 font-mono text-sm font-bold transition-colors"
+      {!isLoading && !error && !isEmpty && activeTab === "earners" && (
+        <>
+          <ol className="space-y-2">
+            {displayData.map(entry => (
+              <li
+                key={entry.address}
+                className="border-border bg-card flex items-center gap-4 border-[2px] px-4 py-3 shadow-[3px_3px_0_var(--color-border)]"
               >
-                {shortenAddress(entry.address, 6)}
-              </PrefetchLink>
-              <span className="border-border bg-background border-[2px] px-2 py-1 text-xs font-black shadow-[2px_2px_0_var(--color-border)]">
-                {formatTokens(entry.totalEarned)}
-              </span>
-            </li>
-          ))}
-        </ol>
+                <RankBadge rank={entry.rank} />
+                <PrefetchLink
+                  to={`/creator/${entry.address}`}
+                  className="hover:text-primary flex-1 font-mono text-sm font-bold transition-colors"
+                >
+                  {shortenAddress(entry.address, 6)}
+                </PrefetchLink>
+                <span className="border-border bg-background border-[2px] px-2 py-1 text-xs font-black shadow-[2px_2px_0_var(--color-border)]">
+                  {formatTokens(entry.totalEarned)}
+                </span>
+              </li>
+            ))}
+          </ol>
+          <div ref={observerTarget} className="mt-8 py-4 text-center">
+            {isLoadingMore && <LoadingState message="Loading more earners…" />}
+          </div>
+        </>
       )}
 
       {/* Most Active Quests list */}
-      {!isLoading && !error && !isEmpty && activeTab === "quests" && activeQuests && (
-        <ol className="space-y-2">
-          {activeQuests.map(entry => (
-            <PrefetchLink
-              key={entry.id}
-              to={`/quest/${entry.id}`}
-              className="border-border bg-card flex cursor-pointer items-center gap-4 border-[2px] px-4 py-3 shadow-[3px_3px_0_var(--color-border)] transition-transform hover:-translate-y-0.5 hover:shadow-[4px_4px_0_var(--color-border)]"
-            >
-              <RankBadge rank={entry.rank} />
-              <span className="flex-1 truncate text-sm font-bold">{entry.name}</span>
-              <span className="border-border bg-background flex items-center gap-1 border-[2px] px-2 py-1 text-xs font-black shadow-[2px_2px_0_var(--color-border)]">
-                <Users className="h-3 w-3" />
-                {entry.enrolleeCount}
-              </span>
-            </PrefetchLink>
-          ))}
-        </ol>
+      {!isLoading && !error && !isEmpty && activeTab === "quests" && (
+        <>
+          <ol className="space-y-2">
+            {displayData.map(entry => (
+              <PrefetchLink
+                key={entry.id}
+                to={`/quest/${entry.id}`}
+                className="border-border bg-card flex cursor-pointer items-center gap-4 border-[2px] px-4 py-3 shadow-[3px_3px_0_var(--color-border)] transition-transform hover:-translate-y-0.5 hover:shadow-[4px_4px_0_var(--color-border)]"
+              >
+                <RankBadge rank={entry.rank} />
+                <span className="flex-1 truncate text-sm font-bold">{entry.name}</span>
+                <span className="border-border bg-background flex items-center gap-1 border-[2px] px-2 py-1 text-xs font-black shadow-[2px_2px_0_var(--color-border)]">
+                  <Users className="h-3 w-3" />
+                  {entry.enrolleeCount}
+                </span>
+              </PrefetchLink>
+            ))}
+          </ol>
+          <div ref={observerTarget} className="mt-8 py-4 text-center">
+            {isLoadingMore && <LoadingState message="Loading more quests…" />}
+          </div>
+        </>
       )}
     </div>
   )
