@@ -142,3 +142,33 @@ export function useRewardPool(questId: number) {
     refetch: (): Promise<void> => query.refetch().then(() => undefined),
   }
 }
+
+export function useQuestAuthority(questId: number) {
+  const enabled = Number.isInteger(questId) && questId >= 0
+  const query = useQuery<string | null, Error>({
+    queryKey: ["questAuthority", questId],
+    queryFn: async () => {
+      if (!Number.isInteger(questId) || questId < 0) throw new Error("Invalid quest id")
+      return rewardsClient.getQuestAuthority(questId)
+    },
+    enabled,
+  })
+
+  const errMsg = query.error
+    ? mapError(
+        query.error,
+        contractError(
+          "rewards",
+          "Funder information is unavailable."
+        )
+      )
+    : null
+
+  return {
+    data: query.data ?? null,
+    isLoading: query.isLoading,
+    isFetching: query.isFetching,
+    error: errMsg,
+    refetch: (): Promise<void> => query.refetch().then(() => undefined),
+  }
+}

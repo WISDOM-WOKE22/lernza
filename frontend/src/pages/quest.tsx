@@ -23,6 +23,7 @@ import {
   Upload,
   Clock,
   Copy,
+  ExternalLink,
 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
@@ -57,7 +58,7 @@ const TransactionConfirmDialog = lazy(() =>
 )
 import type { TransactionDetails } from "@/components/transaction-confirm-dialog"
 import { useWallet } from "@/hooks/use-wallet"
-import { useQuest, useMilestones, useEnrollees, useRewardPool } from "@/hooks/use-quest-data"
+import { useQuest, useMilestones, useEnrollees, useRewardPool, useQuestAuthority } from "@/hooks/use-quest-data"
 import { questClient, QuestStatus, Visibility } from "@/lib/contracts/quest"
 import { milestoneClient, type MilestoneInfo } from "@/lib/contracts/milestone-client"
 import { rewardsClient } from "@/lib/contracts/rewards"
@@ -237,6 +238,7 @@ export function QuestView() {
   const milestonesData = useMilestones(questId)
   const enrolleesData = useEnrollees(questId)
   const poolBalanceData = useRewardPool(questId)
+  const questAuthorityData = useQuestAuthority(questId)
 
   // Combined loading state: true on initial load OR while any background
   // refetch is in-flight (e.g. after a transaction). This keeps the skeleton
@@ -246,7 +248,8 @@ export function QuestView() {
     questData.isLoading ||
     milestonesData.isLoading ||
     enrolleesData.isLoading ||
-    poolBalanceData.isLoading
+    poolBalanceData.isLoading ||
+    questAuthorityData.isLoading
 
   // Background refetch in-flight (post-transaction). Used to suppress
   // interactive actions while data is refreshing without re-showing the
@@ -255,11 +258,12 @@ export function QuestView() {
     questData.isFetching ||
     milestonesData.isFetching ||
     enrolleesData.isFetching ||
-    poolBalanceData.isFetching
+    poolBalanceData.isFetching ||
+    questAuthorityData.isFetching
 
   // Use the first error that exists
   const loadError =
-    questData.error || milestonesData.error || enrolleesData.error || poolBalanceData.error
+    questData.error || milestonesData.error || enrolleesData.error || poolBalanceData.error || questAuthorityData.error
 
   // Refetch function that refreshes all data
 
@@ -310,9 +314,10 @@ export function QuestView() {
       milestonesData.refetch(),
       enrolleesData.refetch(),
       poolBalanceData.refetch(),
+      questAuthorityData.refetch(),
       fetchCompletions(),
     ])
-  }, [questData, milestonesData, enrolleesData, poolBalanceData, fetchCompletions])
+  }, [questData, milestonesData, enrolleesData, poolBalanceData, questAuthorityData, fetchCompletions])
 
   // Get raw data
   const quest = questData.data
@@ -1187,6 +1192,28 @@ export function QuestView() {
                   <span className="text-destructive">Countdown {countdownLabel}</span>
                 )}
               </div>
+              {questAuthorityData.data && (
+                <div className="mt-4 flex items-center gap-2">
+                  <span className="text-muted-foreground text-xs font-bold">Funded by:</span>
+                  <button
+                    onClick={() => {
+                      navigator.clipboard.writeText(questAuthorityData.data!)
+                      addToast("Address copied to clipboard!", "success")
+                    }}
+                    className="font-mono text-xs font-bold hover:text-primary transition-colors"
+                    title="Click to copy"
+                  >
+                    {truncateAddress(questAuthorityData.data)}
+                  </button>
+                  <PrefetchLink
+                    href={`/profile?address=${questAuthorityData.data}`}
+                    className="text-primary hover:text-primary/80 transition-colors"
+                    title="View creator profile"
+                  >
+                    <ExternalLink className="h-3.5 w-3.5" />
+                  </PrefetchLink>
+                </div>
+              )}
             </div>
             <div className="flex shrink-0 flex-wrap gap-3">
               {isOwner ? (
